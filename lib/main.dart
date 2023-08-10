@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        timer.tick;
+        number = timer.tick;
       });
     });
     super.initState();
