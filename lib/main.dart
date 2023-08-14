@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+      // home: const HomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePageHook(),
     );
   }
 }
@@ -58,6 +60,31 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: Text(number.toString()),
+      ),
+    );
+  }
+}
+
+class HomePageHook extends HookWidget {
+  const HomePageHook({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final _numberNotifier = useState(0);
+
+    useEffect(() {
+      final timer = Timer.periodic(Duration(seconds: 1), (time) {
+        _numberNotifier.value = time.tick;
+      });
+      return timer.cancel;
+    }, const []);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Simple Hook"),
+      ),
+      body: Center(
+        child: Text(_numberNotifier.value.toString()),
       ),
     );
   }
