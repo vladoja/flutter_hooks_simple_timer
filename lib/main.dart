@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_timer/timer_hook.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const HomePage(title: 'Flutter Demo Home Page'),
-      home: const HomePageHook(),
+      // home: const HomePageHook(),
+      home: const HomePageCustomHook(),
     );
   }
 }
@@ -85,6 +87,24 @@ class HomePageHook extends HookWidget {
       ),
       body: Center(
         child: Text(_numberNotifier.value.toString()),
+      ),
+    );
+  }
+}
+
+class HomePageCustomHook extends HookWidget {
+  const HomePageCustomHook({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final number = useInfiniteTimer(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Simple Custom Hook"),
+      ),
+      body: Center(
+        child: Text(number.toString()),
       ),
     );
   }
