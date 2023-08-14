@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: const HomePage(title: 'Flutter Demo Home Page'),
       // home: const HomePageHook(),
-      home: const HomePageCustomHook(),
+      // home: const HomePageCustomHook(),
+      home: const TextEditingHook(),
     );
   }
 }
@@ -105,6 +106,71 @@ class HomePageCustomHook extends HookWidget {
       ),
       body: Center(
         child: Text(number.toString()),
+      ),
+    );
+  }
+}
+
+class TextEditingHook extends HookWidget {
+  const TextEditingHook({super.key});
+
+  void makeLogin(email, password) {
+    print("Making login  email:$email, password: $password");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final emailController = useTextEditingController(text: "");
+    final passwordController = useTextEditingController(text: "");
+
+    final _areFieldsEmpty = useState<bool>(true);
+
+    bool areFieldsEmpty() {
+      return emailController.text.isEmpty || passwordController.text.isEmpty;
+    }
+
+    useEffect(() {
+      emailController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+      passwordController.addListener(() {
+        _areFieldsEmpty.value = areFieldsEmpty();
+      });
+    }, [emailController]);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Simple Hook"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: passwordController,
+              keyboardType: TextInputType.text,
+              obscureText: true,
+            ),
+            _areFieldsEmpty.value
+                ? const ElevatedButton(
+                    onPressed: null,
+                    child: Text('Login disabled'),
+                  )
+                : ElevatedButton(
+                    child: const Text('Login enabled'),
+                    onPressed: () {
+                      makeLogin(emailController.text, passwordController.text);
+                    }),
+          ],
+        ),
       ),
     );
   }
